@@ -78,7 +78,7 @@ export class MdParser {
 				if (token) tokens.push(token);
 			});
 			if (this.cur === start) {
-				pLines.push(this.line);
+				pLines.push(this.line.replace(/\n$/, ''));
 				this.goNextLine();
 			} else {
 				if (pLines.length > 0) {
@@ -140,7 +140,7 @@ export class MdParser {
 				res.push(`<a href='${node.href}'>${node.title && node.title.length > 0 ? node.title : node.href}</a>`);
 				break;
 			case 'text':
-				res.push(node.value);
+				res.push(node.value.replace(/ \n/gm, '<br>\n'));
 				break;
 			case 'img':
 				res.push(`<img src='${node.src}' title='${node.title}' >`);

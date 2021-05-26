@@ -16,4 +16,11 @@ describe('MdParser test', () => {
 
         assert.deepStrictEqual(result, '<h1>heading</h1>');
     });
+
+    it.only('line ended with space will be turned to <br>', () => {
+        const src = 'this is \na new line';
+        const result = LazyMark.toHTML(src);
+
+        assert.deepStrictEqual(result, '<p>this is<br>\na new line</p>');
+    });
 });
