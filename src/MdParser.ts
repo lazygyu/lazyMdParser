@@ -81,21 +81,23 @@ export class MdParser {
 				pLines.push(this.line);
 				this.goNextLine();
 			} else {
-				pLines = pLines.join('\n').replace(/\n\n\n+/g, '\n\n').split('\n\n');
-				const pTokens = pLines.map(str => {
-					const token: MdBlockNode = {
-						type: 'block',
-						name: 'paragraph',
-						tag: 'p',
-						start: start,
-						allowInlines: true,
-						length: this.cur - start,
-						content: str,
-					};
-					return token;
-				});
-				tokens.splice(-1, 0, ...pTokens);
-				pLines = [];
+				if (pLines.length > 0) {
+					pLines = pLines.join('\n').replace(/\n\n\n+/g, '\n\n').split('\n\n');
+					const pTokens = pLines.map(str => {
+						const token: MdBlockNode = {
+							type: 'block',
+							name: 'paragraph',
+							tag: 'p',
+							start: start,
+							allowInlines: true,
+							length: this.cur - start,
+							content: str,
+						};
+						return token;
+					});
+					tokens.splice(-1, 0, ...pTokens);
+					pLines = [];
+				}
 			}
 			start = this.cur;
 		}
