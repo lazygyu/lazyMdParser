@@ -1,14 +1,14 @@
-import {MdParser, isBlankLine} from '../markdown';
-import {MdNode} from "../MdNode";
+import {MdParser, isBlankLine} from '../MdParser';
+import {MdBlockNode} from "../MdNode";
 import {IParser} from "../IParser";
 import {ALLOWED_TAGS} from '../constants';
 
 export class HTMLState implements IParser {
-	process(context: MdParser): MdNode | false {
+	process(context: MdParser): MdBlockNode | false {
 		return this.process1(context) || this.process2(context) || false;
 	}
 
-	process1(context: MdParser): MdNode | false {
+	process1(context: MdParser): MdBlockNode | false {
 		let line = context.line;
 		const testPattern = /^<(script|pre|style)( |>|\n)/;
 		if (!testPattern.test(line))
@@ -37,7 +37,7 @@ export class HTMLState implements IParser {
 		};
 	}
 
-	process2(context: MdParser): MdNode | false {
+	process2(context: MdParser): MdBlockNode | false {
 		let line = context.line;
 		const testPattern = /^<\/?([a-z0-9]+)( |\t|\/>|>|\n)/;
 		const start = context.cur;

@@ -1,11 +1,10 @@
-import {MdParser, isBlankLine, stripLineEnd} from '../markdown';
-import {MdNode} from "../MdNode";
+import {MdParser} from '../MdParser';
+import {MdBlockNode} from "../MdNode";
 import {IParser} from "../IParser";
 
 export class BlockquoteState implements IParser {
-	process(context: MdParser): MdNode | false {
+	process(context: MdParser): MdBlockNode | false {
 		let line = context.line;
-		let indent = 0;
 		const start = context.cur;
 
 		if (!line || !line.startsWith('>')) {

@@ -1,67 +1,4 @@
-import {rootCertificates} from 'tls';
-
-type TextNode = {
-    type: 'text',
-    value: string,
-    parent: RootElement | InlineElement,
-};
-
-type ImageNode = {
-    type: 'img',
-    src: string,
-    title: string,
-    parent: RootElement | InlineElement,
-};
-
-type YoutubeNode = {
-    type: 'youtube',
-    src: string,
-    parent: RootElement | InlineElement,
-};
-
-type CodeNode = {
-    type: 'code',
-    value: string,
-    parent: RootElement | InlineElement,
-}
-
-type LinkNode = {
-    type: 'link',
-    href: string,
-    title: string,
-    parent: RootElement | InlineElement,
-}
-
-type LeafElement = TextNode | ImageNode | YoutubeNode | CodeNode | LinkNode;
-
-
-type RootElement = {
-    type: 'root',
-    children: (InlineElement | LeafElement)[]
-};
-
-type StrongNode = {
-    type: 'strong',
-    children: (InlineElement | LeafElement)[],
-    parent: RootElement | InlineElement,
-}
-
-type EmNode = {
-    type: 'em',
-    children: (InlineElement | LeafElement)[],
-    parent: RootElement | InlineElement,
-}
-
-type InlineElement = EmNode | StrongNode;
-type InlineTypes = 'strong' | 'em';
-
-function isRoot(node: any): node is RootElement {
-    return node && 'type' in node && node.type === 'root';
-}
-
-function isLeaf(node: any): node is LeafElement {
-    return node && 'type' in node && ['img', 'youtube', 'code', 'link', 'text'].includes(node.type);
-}
+import {RootElement, InlineElement, LeafElement, isLeaf, InlineTypes, isRoot, CodeNode, LinkNode, ImageNode, YoutubeNode, TextNode} from './MdNode';
 
 export class InlineParser {
     private line: string = '';
@@ -122,6 +59,23 @@ export class InlineParser {
         return res;
     }
 
+    private parsingCode() {
+        const start = this.cur;
+        this.cur++;
+        let str = this.getUntil('`');
+        this.cur++;
+        if (str === null) {
+            this.cur = start;
+            this.addText();
+            return;
+        }
+
+        this.pushNew({
+            type: 'code',
+            value: str
+        } as CodeNode);
+    }
+
     private parsingLink() {
         const start = this.cur;
         let title = '';
@@ -154,25 +108,54 @@ export class InlineParser {
     }
 
     private parsingImage() {
-        const start = this.cur -2;
-        let desc = '';
-        let url = '';
-        while (this.cur < this.line.length && this.line[this.cur] !== ']') {
-            desc += this.line[this.cur];
-            this.cur++;
-        }
+        const start = this.cur;
+        let desc = null;
+        let url = null;
+        this.cur += 2;
+        desc = this.getUntil(']');
         this.cur++;
         if (this.line[this.cur] === '(') {
             this.cur++;
             url = this.getUntil(')');
+            this.cur++;
         } else if (this.line[this.cur] === '[') {
             this.cur++;
             url = this.getUntil(']');
-        } else {
+            this.cur++;
+        }
+        if (url === null || desc === null) {
             this.cur = start;
             this.addText();
             this.addText();
+            return;
         }
+
+        this.pushNew({
+            type: 'img',
+            src: url,
+            title: desc,
+            parent: this.root
+        } as ImageNode);
+    }
+
+    private parsingYoutube() {
+        const start = this.cur;
+        let url = null;
+        this.cur += 2;
+        url = this.getUntil(']');
+        this.cur++;
+        if (url === null) {
+            this.cur = start;
+            this.addText();
+            this.addText();
+            return;
+        }
+
+        this.pushNew({
+            type: 'youtube',
+            src: url,
+            parent: this.root,
+        } as YoutubeNode);
     }
 
     private addText() {
@@ -206,12 +189,14 @@ export class InlineParser {
                 this.parsingInline(2, 'strong');
             } else if (ch === '*') {
                 this.parsingInline(1, 'em');
-            // } else if (ch2 === '![') {
-
-            // } else if (ch2 === '%[') {
-
+            } else if (ch2 === '![') {
+                this.parsingImage();
+            } else if (ch2 === '%[') {
+                this.parsingYoutube();
             } else if (ch === '[') {
                 this.parsingLink();
+            } else if (ch === '`') {
+                this.parsingCode();
             } else {
                 this.addText();
             }

@@ -1,9 +1,9 @@
-import {MdParser, isBlankLine, stripLineEnd} from '../markdown';
-import {MdNode} from "../MdNode";
+import {MdParser, isBlankLine, stripLineEnd} from '../MdParser';
+import {MdBlockNode} from "../MdNode";
 import {IParser} from "../IParser";
 
 export class ListState implements IParser {
-	process(context: MdParser): MdNode | false {
+	process(context: MdParser): MdBlockNode | false {
 		return this.processUl(context) || false;
 	}
 
@@ -18,7 +18,7 @@ export class ListState implements IParser {
 		};
 	}
 
-	processUl(context: MdParser): MdNode | false {
+	processUl(context: MdParser): MdBlockNode | false {
 		let line = stripLineEnd(context.line);
 		let indent = 0;
 		const start = context.cur;

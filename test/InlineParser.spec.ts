@@ -127,4 +127,48 @@ describe('Inline parser Test', () => {
 
         assert.deepStrictEqual(result, root);
     });
+
+    it('image can be parsed', () => {
+        const line = '![title](url)';
+        const result = InlineParser.parse(line);
+
+        const img = {
+            type: 'img',
+            src: 'url',
+            title: 'title',
+            parent: root
+        };
+        root.children.push(img);
+
+        assert.deepStrictEqual(result, root);
+    });
+
+    it('youtube movie can be parsed', () => {
+        const line = '%[youtube]';
+        const result = InlineParser.parse(line);
+
+        const youtube = {
+            type: 'youtube',
+            src: 'youtube',
+            parent: root,
+        };
+
+        root.children.push(youtube);
+
+        assert.deepStrictEqual(result, root);
+    });
+
+    it('inline code parsing', () => {
+        const line = '`code`';
+        const result = InlineParser.parse(line);
+
+        const code = {
+            type: 'code',
+            value: 'code',
+            parent: root
+        };
+        root.children.push(code);
+
+        assert.deepStrictEqual(result, root);
+    });
 });

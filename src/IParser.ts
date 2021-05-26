@@ -1,7 +1,7 @@
-import {MdParser} from './markdown';
-import {MdNode} from "./MdNode";
+import {MdParser} from './MdParser';
+import {MdBlockNode} from "./MdNode";
 
 
 export interface IParser {
-	process(context: MdParser): MdNode | false;
+	process(context: MdParser): MdBlockNode | false;
 }

@@ -1,5 +1,5 @@
-import {MdParser} from '../markdown';
-import {MdNode} from "../MdNode";
+import {MdParser} from '../MdParser';
+import {MdBlockNode} from "../MdNode";
 import {IParser} from "../IParser";
 
 export class HeadingState implements IParser{
@@ -7,7 +7,7 @@ export class HeadingState implements IParser{
 
 	}
 
-	process(context: MdParser): MdNode | false {
+	process(context: MdParser): MdBlockNode | false {
 		if(context.src[context.cur] !== '#') return false;
 		const line = context.line;
 		const start = context.cur;
