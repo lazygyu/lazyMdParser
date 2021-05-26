@@ -71,6 +71,7 @@ export class ListState implements IParser {
 			tag: 'ul',
 			start,
 			allowInlines: false,
+			escapeEntities: false,
 			length: context.cur - start,
 			children: items
 		};
@@ -129,6 +130,7 @@ export class ListState implements IParser {
 			name: 'orderedList',
 			tag: 'ol',
 			start,
+			escapeEntities: false,
 			allowInlines: false,
 			length: context.cur - start,
 			children: items

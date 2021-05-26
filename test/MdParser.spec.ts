@@ -25,9 +25,23 @@ describe('MdParser test', () => {
     });
 
     it('escape html special characters in text node', () => {
-        const src = 'this is a `<code>` tag';
+        const src = 'this is a <code> tag';
         const result = LazyMark.toHTML(src);
 
-        assert.deepStrictEqual(result, '<p>this is a <code>&#60;code&#62;</code> tag</p>');
+        assert.deepStrictEqual(result, '<p>this is a &#60;code&#62; tag</p>');
+    });
+
+    it('escape html special characters in strong node', () => {
+        const src = 'this is a **<code>** tag';
+        const result = LazyMark.toHTML(src);
+
+        assert.deepStrictEqual(result, '<p>this is a <strong>&#60;code&#62;</strong> tag</p>');
+    });
+
+    it('escape html special characters in code block', () => {
+        const src = 'this is a\n```\n<code>\n```\ntag';
+        const result = LazyMark.toHTML(src);
+
+        assert.deepStrictEqual(result, '<p>this is a</p><pre>&#60;code&#62;\n</pre><p>tag</p>');
     });
 });

@@ -29,6 +29,7 @@ export class BlockquoteState implements IParser {
 			name: 'blockquote',
 			tag: 'blockquote',
 			allowInlines: true,
+			escapeEntities: false,
 			start,
 			length: context.cur - start,
 			children: items

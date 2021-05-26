@@ -95,6 +95,7 @@ export class MdParser {
 							name: 'paragraph',
 							tag: 'p',
 							start: start,
+							escapeEntities: false,
 							allowInlines: true,
 							length: this.cur - start,
 							content: str,
@@ -116,6 +117,7 @@ export class MdParser {
 					name: 'paragraph',
 					tag: 'p',
 					start: start,
+					escapeEntities: false,
 					allowInlines: true,
 					length: this.cur - start,
 					content: str,
@@ -188,7 +190,7 @@ export class MdParser {
 			}
 			node.contentRoot && res.push(...this.renderInline(node.contentRoot));
 			if (!node.contentRoot && node.content) {
-				res.push(node.content);
+				res.push(node.escapeEntities ? encodeEntities(node.content) : node.content);
 			}
 			if ('tag' in node && node.tag) res.push(`</${node.tag}>`);
 		});

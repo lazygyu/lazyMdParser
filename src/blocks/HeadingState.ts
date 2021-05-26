@@ -25,6 +25,7 @@ export class HeadingState implements IParser{
 			tag: `h${level}`,
 			start,
 			allowInlines: true,
+			escapeEntities: false,
 			length: context.cur - start,
 			content,
 		};

@@ -31,6 +31,7 @@ export class HTMLState implements IParser {
 			name: 'html',
 			tag: '',
 			allowInlines: false,
+			escapeEntities: false,
 			start,
 			length: context.cur - start,
 			content
@@ -58,6 +59,7 @@ export class HTMLState implements IParser {
 			name: 'html',
 			tag: '',
 			allowInlines: false,
+			escapeEntities: false,
 			start,
 			length: context.cur - start,
 			content

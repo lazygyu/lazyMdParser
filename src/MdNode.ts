@@ -72,6 +72,7 @@ export type MdBlockNode = {
 	tag: string;
 	start: number;
 	length: number;
+	escapeEntities: boolean;
 	content?: string;
 	allowInlines: boolean;
 	children?: MdBlockNode[];

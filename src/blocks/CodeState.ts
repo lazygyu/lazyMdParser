@@ -23,6 +23,7 @@ export class CodeState implements IParser {
 			name: 'codeblock',
 			tag: 'pre',
 			allowInlines: false,
+			escapeEntities: true,
 			start,
 			length: context.cur - start,
 			content
