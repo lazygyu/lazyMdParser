@@ -11,6 +11,12 @@ export function isBlankLine(line) {
 	return line.trim().length === 0;
 }
 
+function encodeEntities(str: string): string {
+	return str.replace(/[\u00A0-\u9999<>\&]/g, function (i) {
+		return '&#' + i.charCodeAt(0) + ';';
+	})
+}
+
 type IParserConstructor = new () => IParser;
 
 export class MdParser {
@@ -137,16 +143,16 @@ export class MdParser {
 				res.push(`<iframe width="100%" height="315" src="https://www.youtube.com/embed/${node.src}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
 				break;
 			case 'link':
-				res.push(`<a href='${node.href}'>${node.title && node.title.length > 0 ? node.title : node.href}</a>`);
+				res.push(`<a href='${node.href}'>${node.title && node.title.length > 0 ? encodeEntities(node.title) : node.href}</a>`);
 				break;
 			case 'text':
-				res.push(node.value.replace(/ \n/gm, '<br>\n'));
+				res.push(encodeEntities(node.value).replace(/ \n/gm, '<br>\n'));
 				break;
 			case 'img':
 				res.push(`<img src='${node.src}' title='${node.title}' >`);
 				break;
 			case 'code':
-				res.push(`<code>${node.value}</code>`);
+				res.push(`<code>${encodeEntities(node.value)}</code>`);
 				break;
 			case 'em':
 				res.push('<em>');
