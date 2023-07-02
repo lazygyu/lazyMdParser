@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import {describe, it} from 'mocha';
-import LazyMark from '../src';
+import LazyMark from '../src/index';
 
 describe('MdParser test', () => {
     it('empty string makes empty html', () => {

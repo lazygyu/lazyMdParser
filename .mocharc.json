@@ -1,0 +1,4 @@
+{
+    "spec": ["dist/test/**/*.spec.js"],
+    "inline-diffs": true
+}

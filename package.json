@@ -1,12 +1,23 @@
 {
   "name": "lazymark",
   "version": "1.0.0",
-  "type": "module",
   "description": "",
+  "type": "module",
   "main": "dist/lazymark.js",
+  "module": "dist/lazymark.mjs",
+  "exports": {
+    "types": "./dist/lazymark.d.ts",
+    "default": "./dist/lazymark.modern.js",
+    "require": "./dist/lazymark.js"
+  },
+  "types": "dist/lazymark.d.ts",
   "source": "src/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lazygyu/lazyMdParser.git"
+  },
   "scripts": {
-    "test": "tsc && mocha",
+    "test": "tsc && mocha --es-module-specifier-resolution=node",
     "build": "microbundle",
     "dev": "microbundle watch"
   },
@@ -18,7 +29,7 @@
     "@types/node": "^15.6.0",
     "chai": "^4.3.4",
     "microbundle": "^0.13.0",
-    "mocha": "^8.4.0",
+    "mocha": "^10.1.0",
     "typescript": "^4.2.4"
   },
   "dependencies": {
